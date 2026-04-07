@@ -1,0 +1,48 @@
+question3 - https://www.tinkercad.com/things/bkkMOpSkD4S-sizzling-amur-blad/editel?returnTo=https%3A%2F%2Fwww.tinkercad.com%2Fdashboard&sharecode=IueNJCBdwm1LuhRNL7QSJJwwK8CfTgq0FtN017Wp6LA
+
+code - 
+
+const int ledPin = 13;
+const int buttonPin = 2;
+
+unsigned long startTime = 0;
+unsigned long reactionTime = 0;
+bool waitingForPress = false;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  
+  pinMode(buttonPin, INPUT_PULLUP); 
+  Serial.begin(9600);
+  
+  Serial.println("Get ready... Wait for the LED!");
+  randomSeed(analogRead(0));}
+
+void loop() {
+  if (!waitingForPress) {
+    // Wait for a random duration 
+    delay(random(2000, 6000)); 
+    
+    // Turn on LED and record start time
+    digitalWrite(ledPin, HIGH);
+    startTime = millis();
+    waitingForPress = true;
+  }
+
+  // Check if button is pressed
+  if (waitingForPress && digitalRead(buttonPin) == LOW) {
+    reactionTime = millis() - startTime; 
+    digitalWrite(ledPin, LOW); 
+    
+    Serial.print("Reaction Time: ");
+    Serial.print(reactionTime);
+    Serial.println(" ms");
+    
+    waitingForPress = false; // Reset for the next test
+    Serial.println("Wait for it again...");
+  }
+}
+
+brief explanation of sensor math used -
+
+For the reaction timer question, I focused on creating a precise way to measure human speed by calculating the relative timing between a random event and a user action. The math is simple but effective: I used the formula where the reaction time is equal to the final timestamp minus the starting timestamp. I captured the start time the exact millisecond the LED turned on and recorded the finish time the moment the button was pressed, giving me a clean measurement of the gap between the two. To make the game fair and unpredictable, I used a trick called random seeding by reading atmospheric noise from an empty analog pin. This ensures the random intervals are never the same twice, so I can't just memorize when the light will pop up. I also used pull-up logic for the button wiring, meaning the pin sits at a high voltage until I press the button to pull it to ground, which triggers the calculation instantly. This approach showed me how to turn raw millisecond data into a meaningful performance metric.
