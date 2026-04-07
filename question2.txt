@@ -1,0 +1,47 @@
+question2 - https://www.tinkercad.com/things/2Y68h78EZW2-spectacular-jofo/editel?returnTo=https%3A%2F%2Fwww.tinkercad.com%2Fdashboard&sharecode=2ej6nAAOM2Au244IXgpHfwBG0d5nGyif2ag973YHHBQ
+
+code -
+
+const int potPin = A0;      
+const int ledPin = 13;      
+const int redPin = 11;      
+const int greenPin = 10;    
+const int bluePin = 9;      
+
+unsigned long previousMillis = 0;
+int ledState = LOW;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+}
+
+void loop() {
+  // Read the potentiometer value (0 to 1023)
+  int potValue = analogRead(potPin);
+
+  // Control RGB Color based on pot position
+  int redVal = map(potValue, 0, 341, 255, 0); 
+  int greenVal = map(potValue, 342, 682, 0, 255);
+  int blueVal = map(potValue, 683, 1023, 0, 255);
+
+  // Constrain ensures values stay within PWM limits (0-255)
+  analogWrite(redPin, constrain(redVal, 0, 255));
+  analogWrite(greenPin, constrain(greenVal, 0, 255));
+  analogWrite(bluePin, constrain(blueVal, 0, 255));
+
+  // Control Blink Rate of the Normal LED
+  int blinkInterval = map(potValue, 0, 1023, 100, 1000);
+  
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= blinkInterval) {
+    previousMillis = currentMillis;
+    ledState = !ledState;
+    digitalWrite(ledPin, ledState);
+  }
+}
+
+brief explanation & logic -
+In the second question, I took things a step further by using a single potentiometer to drive two different behaviors simultaneously. I used the analogRead function to grab a raw value from my sensor, which gives me a range from 0 to 1023. I then used the map function to translate that raw data into two different scales. First, I converted it to a 0-255 range to control the PWM intensity of my RGB LED, allowing me to shift through a spectrum of colors just by turning the knob. At the same time, I used that same sensor value to set a blink interval for another LED. This meant that as I turned the potentiometer, the color shifted and the blinking speed changed on the fly. Because I stuck with my non-blocking millis logic from the first project, the RGB color updates are instant and fluid; the light doesn't stutter or wait for a blink cycle to finish before changing colors, which makes the whole interface feel responsive and well-engineered.
