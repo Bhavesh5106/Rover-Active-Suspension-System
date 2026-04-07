@@ -1,0 +1,54 @@
+question1 - https://www.tinkercad.com/things/dPXsqMIsvqR-glorious-snicket/editel?returnTo=https%3A%2F%2Fwww.tinkercad.com%2Fdashboard&sharecode=gpdbIxh71Ql8k1j_IKItKoueGyWY1UdiTk_-WnpGTsY
+
+code - 
+
+const int led1 = 13;
+const int led2 = 12;
+const int led3 = 11;
+
+// Variables to store the last time each LED was toggled
+unsigned long previousMillis1 = 0;
+unsigned long previousMillis2 = 0;
+unsigned long previousMillis3 = 0;
+
+// Intervals in milliseconds
+const long interval1 = 500;
+const long interval2 = 1000;
+const long interval3 = 1500;
+
+// Current state of each LED
+int state1 = LOW;
+int state2 = LOW;
+int state3 = LOW;
+
+void setup() {
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+}
+
+void loop() {
+  unsigned long currentMillis = millis();
+
+  // Check LED 1
+  if (currentMillis - previousMillis1 >= interval1) {
+    previousMillis1 = currentMillis;     state1 = !state1;               
+    digitalWrite(led1, state1);
+  }
+
+  // Check LED 2
+  if (currentMillis - previousMillis2 >= interval2) {
+    previousMillis2 = currentMillis;
+    state2 = !state2;
+    digitalWrite(led2, state2);
+  }
+
+  // Check LED 3
+  if (currentMillis - previousMillis3 >= interval3) {
+    previousMillis3 = currentMillis;
+    state3 = !state3;
+    digitalWrite(led3, state3);
+  }
+}
+
+brief explanation - For the first question, I wanted to move beyond the basic blink sketch and figure out how to make an Arduino multitask. I set up three LEDs and gave each one a unique pulse—one every 500ms, one every 1000ms, and the last at 1500ms. The big challenge was getting them to blink at the same time without interfering with each other. Instead of using the standard delay function, which basically freezes the processor and makes it sit idle, I used a non-blocking approach with millis. I essentially turned the Arduino into a high-speed stopwatch handler by creating three separate timestamps. In every single loop, the code checks the current time against the last recorded time for each LED. If the difference is greater than the interval I set, the LED toggles its state. Since the loop runs thousands of times a second, it feels like the board is doing three things at once, which is a much more professional way to handle timing for complex systems.
