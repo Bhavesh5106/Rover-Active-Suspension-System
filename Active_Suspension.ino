@@ -17,8 +17,8 @@ void loop() {
   
   int tiltValue = analogRead(tiltSensorPin);
   int compensation = map(tiltValue, 0, 1023, -45, 45);
-  int leftAngle = baseAngle + compensation;
-  int rightAngle = baseAngle - compensation;
+  int leftAngle = baseAngle - compensation;
+  int rightAngle = baseAngle + compensation;
   leftSuspension.write(leftAngle);
   rightSuspension.write(rightAngle);
   Serial.print("Tilt Input: ");
